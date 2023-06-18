@@ -60,6 +60,9 @@ namespace WebApplication3.Controllers
         {
             var pessoaUpdate = _pessoaRepository.BuscarporKey(key);
 
+            if (pessoaUpdate == null)
+                return NotFound();
+
             pessoaUpdate.UpdatedAt = DateTime.Now;
             pessoaUpdate.IsActive = pessoaAtualizada.IsActive;
             pessoaUpdate.Name = pessoaAtualizada.Name;
@@ -72,9 +75,24 @@ namespace WebApplication3.Controllers
         }
 
         // DELETE api/<CadastroController>/5
-        [HttpDelete("{id}")]
-        public void Delete(string id)
+        [HttpDelete("{key}")]
+        public IActionResult Delete(string key)
         {
+            var pessoadeletada = _pessoaRepository.BuscarporKey(key);
+
+            if (pessoadeletada == null)
+                return NotFound();
+
+            pessoadeletada.IsActive = false;
+
+            _pessoaRepository.Atualizar(pessoadeletada);
+
+            return Ok(pessoadeletada);
+               
+            
+
+
+
         }
     }
 }
